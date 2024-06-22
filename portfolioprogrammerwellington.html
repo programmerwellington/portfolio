@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Curriculum Wellington</title>
+    <style>
+        /* "Mobile first" 320px x 568px Iphone 5*/
+        * {
+            margin: 0;
+            padding: 0;
+            border: 0;
+            font-family: 'Arial Narrow', Arial, sans-serif;
+        }
+        :root {
+            --bgcolor: white;
+            --fontcolor: black;
+            --headbgcolor: slategray;
+            --headfontcolor: white;
+            --lateralbgcolor: lightblue;
+            --lateralfontcolor: black;
+            --linkfontcolor: blue;
+            --shadownamepro: 3px 3px 3px black;
+
+            --displayportuguese: grid;
+            --displayenglish: none;
+            --light: 'Claro';
+            --dark: 'Escuro';
+        }
+        .cdark {
+            --bgcolor: rgba(0, 0, 0, 0.6);
+            --fontcolor: white;
+            --headbgcolor: rgba(0, 0, 0, 0.8);
+            --headfontcolor: white;
+            --lateralbgcolor: rgba(0, 0, 0, 0.7);
+            --lateralfontcolor: white;
+            --linkfontcolor: blue;
+            --shadownamepro: 3px 3px 3px darkslateblue;
+        }
+        body.cdark::after {
+        display: none;
+        }
+        .clanguage {
+            --displayportuguese: none;
+            --displayenglish: grid;
+            --light: 'Light';
+            --dark: 'Dark';
+        }
+        body {
+            background-color: var(--bgcolor);
+            color: var(--fontcolor);
+            transition: all .2s linear;
+        }
+        article {
+            max-width: 1024px;
+            margin: auto;
+        }
+        nav {
+            background-color: var(--headbgcolor);
+            color: var(--headfontcolor);
+            padding: 5px 0px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .cbox, .pecbox {
+            opacity: 0;
+            position: absolute;
+        }
+        .label, .pelabel {
+            height: 35px;
+            width: 200px;
+            border-radius: 50px;
+            cursor: pointer;
+            margin: 3px;
+        }
+        .cbuttons, .cname, .cpro {
+            font-weight: bold;
+            text-shadow: var(--shadownamepro);
+        }
+        .clight::after {
+        content: var(--light);
+        }
+        .cdark::after {
+            content: var(--dark);
+        }
+        .cportuguese {
+            display: var(--displayportuguese);
+        }
+        .cenglish {
+            display: var(--displayenglish);
+        }
+        .cswitch {
+            --_switch-bg-clr: #70a9c5;
+            --_switch-padding: 4px; /* padding around button*/
+            --_slider-bg-clr: rgba(12, 74, 110, 0.65); /* slider color unchecked */
+            --_slider-bg-clr-on: rgba(12, 74, 110, 1); /* slider color checked */
+            --_slider-txt-clr: #ffffff;
+            --_label-padding: 0 2rem; /* padding around the labels -  this gives the swith it's global width and height */
+            --_switch-easing: cubic-bezier(
+            0.47,
+            1.64,
+            0.41,
+            0.8
+            ); /* easing on toggle switch */
+
+            display: flex;
+            margin: 5px;
+            justify-content: center;
+            position: relative;
+            border-radius: 9999px;
+            cursor: pointer;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            position: relative;
+            isolation: isolate;
+        }
+
+        .cswitch input[type="checkbox"] {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+        .cswitch > span {
+            display: grid;
+            place-content: center;
+            transition: opacity 300ms ease-in-out 150ms;
+            padding: var(--_label-padding);
+        }
+        .cswitch::before,
+        .cswitch::after {
+            content: "";
+            position: absolute;
+            border-radius: inherit;
+            transition: inset 150ms ease-in-out;
+        }
+        /* switch slider */
+        .cswitch::before {
+            background-color: var(--_slider-bg-clr);
+            inset: var(--_switch-padding) 50% var(--_switch-padding)
+            var(--_switch-padding);
+            transition: inset 500ms var(--_switch-easing),
+            background-color 500ms ease-in-out;
+            z-index: -1;
+            box-shadow:inset 0 1px 1px rgba(0,0,0,.3),0 1px rgba(255,255,255,.3);
+        }
+        /* switch bg color */
+        .cswitch::after {
+            background-color: var(--_switch-bg-clr);
+            inset: 0;
+            z-index: -2;
+        }
+        /* switch hover */
+        .cswitch:hover::after {
+            inset: -0.25rem;
+        }
+        /* checked - move slider to right */
+        .cswitch:has(input:checked)::before {
+            background-color: var(--_slider-bg-clr-on);
+            inset: var(--_switch-padding) var(--_switch-padding) var(--_switch-padding)
+            50%;
+        }
+        /* checked - set opacity */
+        .cswitch > span:last-of-type,
+        .cswitch > input:checked + span:first-of-type {
+            opacity: 0.5;
+        }
+        .cswitch > input:checked ~ span:last-of-type {
+            opacity: 1;
+        }
+        header {
+            background-color: var(--headbgcolor);
+            color: var(--headfontcolor);
+            text-align: end;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-weight: bold;
+            padding: 0px 5px 5px 5px;
+        }
+        .cname {
+            font-size: 8.5vw;
+            text-transform: uppercase;
+        }
+        .cpro {
+            font-size: 5vw;
+        }
+        .cname, .cpro, summary, main, aside, footer  {
+            padding: 0px 10px;
+        }
+        summary, main {
+            background-color: var(--bgcolor);
+            color: var(--fontcolor);
+        }
+        summary {
+            text-align: justify;
+        }
+        .csummary, .cexperiences, .cacademic, .ccourses, .clanguages, .cvolunteering {
+            font-weight: bold;
+            font-size: 1.2rem;
+            padding-top: 10px;
+        }
+        .cexperiences {
+            border-bottom: 1px solid;
+        }
+        .cperiod, .ccompany, .cbusiness {
+            display: table-cell;
+            font-size: .95rem;
+            width: 100vw;
+            padding-top: 5px;
+        }
+        .cposition {
+            font-weight: bold;
+            border-bottom: 1px solid;
+            padding-bottom: 5px;
+        }
+        .ccompany {
+            text-align: left;
+        }
+        .cbusiness {
+            text-align: right;
+        }
+        .cdata {
+            padding-top: 5px;
+        }
+        aside, footer {
+            background-color: var(--lateralbgcolor);
+            color: var(--lateralfontcolor);
+            text-align: left;
+            padding-bottom: 5px;
+        }
+        a:link, a:visited, a:hover {
+            color: var(--linkfontcolor);
+            &:hover {
+                font-weight: bold;
+            }
+        }
+        @media (min-width: 768px), print {
+            /* 768px x 1023px iPad mini e impressora*/
+            .cportuguese, .cenglish {
+                grid-template-columns:
+                280px auto-fill;
+                grid-auto-rows:
+                150px
+                auto-fill;
+                grid-template-areas:
+                "nav    nav    "
+                "header header "
+                "aside  summary"
+                "footer main   ";
+            }
+            nav {
+                grid-area: nav;
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+            }
+            .cname {
+                font-size: 8vw;
+            }
+            .cpro {
+                font-size: 5vw;
+            }
+            header {
+                grid-area: header;
+            }
+            summary {
+                grid-area: summary;
+            }
+            main {
+                grid-area: main;
+            }
+            aside, footer, main {
+                padding: 5px;
+            }
+            aside, footer {
+                text-align: right;
+            }
+            aside {
+                grid-area: aside;
+            }
+            footer, main {
+                align-content: end;
+            }
+            footer {
+                grid-area: footer;
+            }
+            .cvolunteering, .clanguages, .cacademic {
+                padding-top: 7vh;
+            }
+        }
+        @media (min-width: 1024px) {
+            .cname {
+                font-size: 62.2pt;
+            }
+            .cpro {
+                font-size: 37.8pt;
+            }
+        }
+        @media print {
+            /*
+            Print:
+            - A4;
+            - margins: no;
+            - background graphics.
+            */
+            .cdark {
+                --bgcolor: white;
+                --fontcolor: black;
+                --headbgcolor: white;
+                --headfontcolor: black;
+                --lateralbgcolor: white;
+                --lateralfontcolor: black;
+                --linkfontcolor: black;
+                --shadownamepro: 3px 3px 3px black;
+
+                --displayportuguese: grid;
+                --displayenglish: none;
+                --light: 'Claro';
+                --dark: 'Escuro';
+            }
+            header, aside, footer {
+                background-color: transparent;
+            }
+            aside, footer {
+                border: 0;
+            }
+            a:link, a:visited, a:hover {
+                color: black;
+            }
+            .cbuttons {
+                display: none;
+            }
+            header {
+                min-height: 12vh;
+                padding: 30px 30px 10px 0px;
+                color: lightgray;
+            }
+            summary, .cdata {
+                padding-bottom: 60px;
+            }
+            summary, main {
+                padding-right: 30px;
+            }
+            aside {
+                min-width: 300px;
+            }
+            .ccourses, .cacademic, .clanguages, .cvolunteering {
+                padding-top: 6vh;
+            }
+            footer, main {
+                padding-bottom: 110px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <article>
+        <nav class="cbuttons">
+            <label for="icheck" class="cswitch label" aria-label="Toggle Filter">
+                <input type="checkbox" class="cbox" id="icheck">
+                <span class="clight"></span>
+                <span class="cdark"></span>
+            </label>
+            <label for="peicheck" class="cswitch label" aria-label="Toggle Filter">
+                <input type="checkbox" class="pecbox" id="peicheck">
+                <span>Português</span>
+                <span>English</span>
+            </label>
+        </nav>
+        <div class="cportuguese">
+            <header>
+                <p class="cname">
+                    WELLINGTON A. AYALA
+                </p>
+                <p class="cpro">
+                    Gerente de Tecnologia da Informação
+                </p>
+            </header>
+            <summary>
+                <p class="csummary">
+                    COMPETÊNCIAS E REALIZAÇÕES
+                </p>
+                <p>
+                    Executivo Pleno com experiência em Tecnologia da Informação desde 1.996, na Liderança em multinacionais com foco em soluções, otimizações e resultados.
+                    Atuou nos segmentos de Tecnologia, Indústria, Mineração, Atacado, Distribuidora,  Varejo e Logística.
+                    Inúmeras conduções de Governança de T.I., Infra Estrutura, Redes, Telefonia,  Projetos de Implantação de ERPs TMSs usando Agile e PMBoK, Customizações, Integrações entre Sistemas Híbridos, Migração de Dados, Parametrizações, Treinamentos Gerenciais/Operacionais (DRE, Balancetes, Evoluções do Patrimônio Líquido, Custos, Financeiro, Compras, Vendas, Precificações, Estoque, Giro de Estoque...), Atualizações ("Upgrades") simultâneas de Sistemas, Virtualizações de Servidores, Sistemas em Nuvem (Cloud), Suporte à Usuário Final, Políticas de Segurança, Adequação às legislações em ambientes de alta complexidade com rápida integração entre setores.
+                    Controlou Orçamentos (Budgets), Resultados com Fornecedores e partes interessadas ("Stakeholders"), B.I. (Business Intelligence) com Indicadores de Gestão e Métricas (KPIs), Terceirizações ("Outsourcing") e Auditorias.
+                    Trabalhou com Totvs, Winthor, Datasul, Resulth, Colegium, CoreVision, Oracle; aumentou a margem de lucro utilizando B.I. em mais R$ 1 M/ano reprojetando o Compras; eleito melhor Instrutor de Treinamento.
+                </p>
+            </summary>
+            <main>
+                <p class="cexperiences">
+                    EXPERIÊNCIAS MAIS RELEVANTES
+                </p>
+                <p class="cperiod">
+                    01/15 atual
+                </p>
+                <p class="ccompany">
+                    Autônomo
+                </p>
+                <p class="cbusiness">
+                    Infraestrutura ERP
+                </p>
+                <p class="cposition">
+                    Consultor
+                </p>
+                <p class="cperiod">
+                    01/21 à 09/21
+                </p>
+                <p class="ccompany">
+                    VJR
+                </p>
+                <p class="cbusiness">
+                    Atacado
+                </p>
+                <p class="cposition">
+                    Supervisor de Tecnologia da Informação
+                </p>
+                <p class="cperiod">
+                    08/20 à 01/21
+                </p>
+                <p class="ccompany">
+                    Amazon
+                </p>
+                <p class="cbusiness">
+                    Fullfilment Center
+                </p>
+                <p class="cposition">
+                    Support Asset
+                </p>
+                <p class="cperiod">
+                    03/13 à 01/15
+                </p>
+                <p class="ccompany">
+                    B³Cube Group
+                </p>
+                <p class="cbusiness">
+                    Logística
+                </p>
+                <p class="cposition">
+                    Supervisor de Tecnologia da Informação
+                </p>
+                <p class="cperiod">
+                    01/11 à 03/13
+                </p>
+                <p class="ccompany">
+                    Loja
+                </p>
+                <p class="cbusiness">
+                    Vestuário
+                </p>
+                <p class="cposition">
+                    Proprietário
+                </p>
+                <p class="cperiod">
+                    05/09 à 10/10
+                </p>
+                <p class="ccompany">
+                    Teknisa Software
+                </p>
+                <p class="cbusiness">
+                    Software
+                </p>
+                <p class="cposition">
+                    Consultor de B.I. (Business Intelligence)
+                </p>
+                <p class="cperiod">
+                    07/06 à 01/08
+                </p>
+                <p class="ccompany">
+                    PC Sistemas
+                </p>
+                <p class="cbusiness">
+                    Software
+                </p>
+                <p class="cposition">
+                    Consultor de Implantação de E.R.P.
+                </p>
+            </main>
+            <aside>
+                <div class="cdata">
+                    <p>
+                        <a href="tel:+5531992885679" target="_blank">
+                            +55 31 99288.5679
+                        </a>
+                    </p>
+                    <p>
+                        <a href="mailto:wellington.a.ayala@gmail.com" target="_blank">
+                            wellington.a.ayala@gmail.com
+                        </a>
+                    </p>
+                    <p class="linkedin">
+                        <a href="https://www.linkedin.com/in/wellington-ayala/" target="_blank">
+                            www.linkedin.com/in/wellington-ayala/
+                        </a>
+                    </p>
+                    <p>
+                        Belo Horizonte MG Brasil
+                    </p>
+                    <p>
+                        1.976
+                    </p>
+                </div>
+                <p class="ccourses">
+                    CURSOS E HABILIDADES
+                </p>
+                <p>
+                    Clojure
+                </p>
+                <p>
+                    JavaScript
+                </p>
+                <p>
+                    HTML CSS Grid FlexBox
+                </p>
+                <p>
+                    Oracle PL SQL
+                </p>
+                <p>
+                    Clipper
+                </p>
+                <p>
+                    Lógica de Programação
+                </p>
+                <p>
+                    Windows Server
+                </p>
+                <p>
+                    Linux
+                </p>
+                <p>
+                    CCNA Cisco 1 e 2
+                </p>
+                <p>
+                    Hardware Microcomputadores
+                </p>
+            </aside>
+            <footer>
+                <p class="cacademic">
+                    FORMAÇÃO ACADÊMICA
+                </p>
+                <p>
+                    Gerenciamento de Redes de Computadores
+                </p>
+                <p class="clanguages">
+                    IDIOMAS
+                </p>
+                <p>
+                    Português nativo
+                </p>
+                <p>
+                    Inglês básico
+                </p>
+                <p>
+                    Italiano básico
+                </p>
+                <p class="cvolunteering">
+                    ATIVIDADES NO 3º SETOR
+                </p>
+                <p>
+                    Voluntário Campanha do Quilo 1.996 (FEIG)
+                </p>
+                <p>
+                    Marmitas pra moradores de rua 2.024 (FEIM)
+                </p>
+            </footer>
+        </div>
+        <div class="cenglish">
+            <header>
+                <p class="cname">
+                    WELLINGTON A. AYALA
+                </p>
+                <p class="cpro">
+                    Information Technology Manager
+                </p>
+            </header>
+            <summary>
+                <p class="csummary">
+                    SUMMARY
+                </p>
+                <p>
+                    Executive largest experience in Information Technology since 1.996, in multinationals's Leadershipping foccused in solutions, optimzations and results.
+                    Worked in Technology, Industry, Mining, Wholesale, Distribuitor, Retail and Logistics.
+                    Numerous IT Governance conducts, Infrastructure, Networks, Telephony, ERP TMSs Implementation Projects using Agile and PMBoK, Customizations, Integrations between Hybrid Systems, Data Migration, Parameterizations, Management/Operational Training (DRE, Balance Sheets, Equity Evolutions Net, Costs, Financial, Purchases, Sales, Pricing, Stock, Stock Turnover...), Simultaneous System Updates ("Upgrades"), Server Virtualizations, Cloud Systems, End User Support, Security Policies Security, Compliance with legislation in highly complex environments with rapid integration between sectors.
+                    Controlled Budgets, Results with Suppliers and interested parties ("Stakeholders"), B.I. (Business Intelligence) with Management Indicators and Metrics (KPIs), Outsourcing (“Outsourcing”) and Audits.
+                    Worked with Totvs, Winthor, Datasul, Resulth, Colegium, CoreVision, Oracle; increased profit margin using B.I. an additional R$ 1 M/year by redesigning Purchasing; voted best Training Instructor.
+                </p>
+            </summary>
+            <main>
+                <p class="cexperiences">
+                    MORE RELEVANT EXPERIENCES
+                </p>
+                <p class="cperiod">
+                    15/01 present
+                </p>
+                <p class="ccompany">
+                    Autonomous
+                </p>
+                <p class="cbusiness">
+                    Infraestructure ERP
+                </p>
+                <p class="cposition">
+                    Consultant
+                </p>
+                <p class="cperiod">
+                    21/01 to 21/09
+                </p>
+                <p class="ccompany">
+                    VJR
+                </p>
+                <p class="cbusiness">
+                    Wholesale
+                </p>
+                <p class="cposition">
+                    Information Technology Supervisor
+                </p>
+                <p class="cperiod">
+                    20/08 to 21/01
+                </p>
+                <p class="ccompany">
+                    Amazon
+                </p>
+                <p class="cbusiness">
+                    Fullfilment Center
+                </p>
+                <p class="cposition">
+                    Support Asset
+                </p>
+                <p class="cperiod">
+                    13/03 to 15/01
+                </p>
+                <p class="ccompany">
+                    B³Cube Group
+                </p>
+                <p class="cbusiness">
+                    Logistics
+                </p>
+                <p class="cposition">
+                    Information Techonology Supervisor
+                </p>
+                <p class="cperiod">
+                    11/01 to 13/03
+                </p>
+                <p class="ccompany">
+                    Fashion Store
+                </p>
+                <p class="cbusiness">
+                    Clothing
+                </p>
+                <p class="cposition">
+                    Owner
+                </p>
+                <p class="cperiod">
+                    09/05 to 10/10
+                </p>
+                <p class="ccompany">
+                    Teknisa Software
+                </p>
+                <p class="cbusiness">
+                    Software
+                </p>
+                <p class="cposition">
+                    B.I. Consultant (Business Intelligence)
+                </p>
+                <p class="cperiod">
+                    06/07 to 08/01
+                </p>
+                <p class="ccompany">
+                    PC Sistemas
+                </p>
+                <p class="cbusiness">
+                    Software
+                </p>
+                <p class="cposition">
+                    E.R.P. Consultant
+                </p>
+            </main>
+            <aside>
+                <div class="cdata">
+                    <p>
+                        <a href="tel:+5531992885679" target="_blank">
+                            +55 31 99288.5679
+                        </a>
+                    </p>
+                    <p>
+                        <a href="mailto:wellington.a.ayala@gmail.com" target="_blank">
+                            wellington.a.ayala@gmail.com
+                        </a>
+                    </p>
+                    <p class="linkedin">
+                        <a href="https://www.linkedin.com/in/wellington-ayala/" target="_blank">
+                            www.linkedin.com/in/wellington-ayala/
+                        </a>
+                    </p>
+                    <p>
+                        Belo Horizonte MG Brazil
+                    </p>
+                    <p>
+                        1.976
+                    </p>
+                </div>
+                <p class="ccourses">
+                    COURSES AND SKILLS
+                </p>
+                <p>
+                    Clojure
+                </p>
+                <p>
+                    JavaScript
+                </p>
+                <p>
+                    HTML CSS Grid FlexBox
+                </p>
+                <p>
+                    Oracle PL SQL
+                </p>
+                <p>
+                    Clipper
+                </p>
+                <p>
+                    Lógica de Programação
+                </p>
+                <p>
+                    Windows Server
+                </p>
+                <p>
+                    Linux
+                </p>
+                <p>
+                    CCNA Cisco 1 e 2
+                </p>
+                <p>
+                    Hardware Microcomputers
+                </p>
+            </aside>
+            <footer>
+                <p class="cacademic">
+                    GRADUATION
+                </p>
+                <p>
+                    Networking Management
+                </p>
+                <p class="clanguages">
+                    LANGUAGES
+                </p>
+                <p>
+                    Portuguese native
+                </p>
+                <p>
+                    English basic
+                </p>
+                <p>
+                    Italian basic
+                </p>
+                <p class="cvolunteering">
+                    ACTIVITIES IN 3º SECTOR
+                </p>
+                <p>
+                    Donations Voluntary 1.996 (FEIG)
+                </p>
+                <p>
+                    Lunchboxes to homeless people 2.024 (FEIM)
+                </p>
+            </footer>
+    </article>
+    </div>
+    <script>
+        const icheck = document.getElementById('icheck')
+        icheck.addEventListener('change', () => {
+            document.body.classList.toggle('cdark')
+        })
+
+        const peicheck = document.getElementById('peicheck')
+        peicheck.addEventListener('change', () => {
+            document.body.classList.toggle('clanguage')
+        })
+    </script>
+</body>
+</html>
