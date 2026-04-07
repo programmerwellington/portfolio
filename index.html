@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Wellington</title>
+
+    <style>
+        * {/* Mobile First */
+            margin: 0;
+            padding: 0;
+            border: 0;
+            box-sizing: border-box;
+            font-family: Arial, 'Times New Roman';
+        }
+
+        body {
+            max-width: 768px;
+            margin: auto;
+            display: grid;
+            grid-template-columns: 1fr;
+            grid-template-areas:    "nav"
+                                    "header"
+                                    "summary"
+                                    "main"
+                                    "aside"
+                                    "footer";
+            transition: background-color 0.3s;
+        }
+        nav {
+            grid-area: nav;
+        }
+        header {
+            grid-area: header;
+            justify-items: end;
+            text-align: right;
+        }
+        summary {
+            grid-area: summary;
+        }
+        main {
+            grid-area: main;
+        }
+        aside {
+            grid-area: aside;
+        }
+        footer {
+            grid-area: footer;
+        }
+        ul {
+            list-style-position: inside;
+            padding-left: 10px;
+        }
+        li::marker {
+            content: "- ";
+        }
+        nav, header, summary, main, aside, footer {
+            padding: 10px;
+        }
+        nav, aside, footer, .cbusiness {
+            text-align: right;
+        }
+        summary, main {
+            line-height: 1.2;
+            text-align: justify;
+        }
+        footer, main {
+            align-self: self-end;
+        }
+
+        .cname {
+            font-size: clamp(2rem, 8.5vw, 4rem);
+            line-height: 1;
+            text-transform: uppercase;
+        }
+        .cpro {
+            font-size: clamp(5vw, 7vw, 9vw);
+            padding-bottom: 20px;
+        }
+        .cexperiences, .cposition {
+            border-bottom: 1px solid;
+        }
+        .cposition {
+            padding-bottom: 5px;
+        }
+        .cposition, .cacademic, .ccourses, .clanguages, .cvolunteering, .csummary, .cexperiences {
+            font-weight: bold;
+        }
+        .ccompany {
+            text-align: left;
+        }
+        .cname, .cpro {
+            color: #ffffff;
+            text-shadow: 3px 3px 3px #000000;
+        }
+        .cacademic, .ccourses, .clanguages, .cvolunteering {
+            font-size: 1.1rem;
+        }
+        .csummary, .cexperiences {
+            font-size: 1.2rem;
+        }
+        .cacademic, .ccourses, .clanguages, .cvolunteering, .csummary, .cexperiences {
+            padding-top: 10px;
+        }
+        .cperiod, .ccompany, .cbusiness {
+            display: table-cell;
+            width: 100vw;
+        }
+        .cperiod, .ccompany, .cbusiness, .link {
+            padding-top: 5px;
+        }
+        .link {
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+        .link, .link:visited, .link:hover, .link:active {
+            color: #0000ff;
+        }
+        .link:hover {
+            transform: translateY(-3px);
+        }
+        
+        /* Buttons: Clear/Dark Mode and Switch Languages */
+        .btn-container {
+            text-align: center;
+        }
+        button {
+            height: 35px;
+            width: 100px;
+            border-radius: 50px;
+            cursor: pointer;
+            margin: 3px;
+            
+            /* Glassmorphism */
+            background: rgba(255, 255, 255, 0.2); 
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            
+            /* Glass border and reflection */
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            
+            /* 3D Effects and shadows */
+            box-shadow: 
+                0 4px 15px rgba(0, 0, 0, 0.1),
+                inset 0 2px 2px rgba(255, 255, 255, 0.4),
+                inset 0 -2px 2px rgba(0, 0, 0, 0.1);
+
+            /* Suavizations */
+            transition: all 0.3s ease;
+            color: white;
+            text-shadow: 3px 3px 3px #000000;
+        }
+        /* 3D effects interactions */
+        button:hover {
+            transform: translateY(-2px);
+            background: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+        button:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        body.dark-mode button {
+            background-color: #444;
+            color: white;
+            border-color: #777;
+        }
+
+        /* Light mode */
+        nav, header {
+            background-color: #8da8b9;
+        }
+        aside, footer {
+            background-color: #b3ebf2;
+        }
+        summary, main {
+            background-color: none;
+        }
+        /* Dark mode */
+        body.dark-mode {
+            color: #ffffff;
+        }
+        body.dark-mode, html:has(body.dark-mode), body.dark-mode nav, body.dark-mode header {
+            background-color: #000000;
+        }
+        body.dark-mode aside, body.dark-mode footer {
+            background-color: #111111;
+        }
+        body.dark-mode summary, body.dark-mode main {
+            background-color: #222222;
+        }
+
+        /* Languages logic */
+        #pt-br {
+            display: contents;
+        }
+        #en {
+            display: none;
+        }
+
+        /* Age's tooltip */
+        .birthday-container {
+            position: relative;
+            display: inline-block;
+            cursor: default;
+            padding: 5px;
+        }
+        .tooltip-age {
+            visibility: hidden;
+            width: 60px;
+            background-color: #8da8b9;
+            color: #fff;
+            text-align: center;
+            border-radius: 8px;
+            padding: 10px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -60px;
+            opacity: 0;
+            transition: opacity 0.3s, transform 0.3s;
+            transform: translateY(10px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .tooltip-age::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #3498db transparent transparent transparent;
+        }
+        .birthday-container:hover .tooltip-age {
+            visibility: visible;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @media (min-width: 768px) {/*Screen width between 768px and 1024px */
+            body {
+                max-width: 1024px;
+                grid-template-columns: 1fr 3fr;
+                grid-template-areas:    "nav    header"
+                                        "aside  summary"
+                                        "aside  main"
+                                        "footer main";
+            }
+            nav {
+                align-content: center;
+            }
+            nav, header {
+                padding: 20px 20px;
+            }
+
+            .cname {
+                font-size: clamp(2.9rem, 6vw, 4.5rem);
+            }
+            .cpro {
+                font-size: clamp(2.5rem, 5.2vw, 3.9rem);
+                padding-bottom: 0;
+            }
+        }
+
+        @media print {/* To A4 print */
+            *, body * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                background-color: #ffffff !important;
+                color: #808080 !important;
+            }
+            @page {
+                margin: 0;
+            }
+            body {
+                max-width: 100%;
+                margin: 1.6cm;
+                display: grid;
+                grid-template-columns: 1fr 3fr;
+                grid-template-areas:    "nav    header"
+                                        "aside  summary"
+                                        "aside  main"
+                                        "footer main";
+                zoom: .63;
+                margin-top: 2.5cm;
+            }
+            
+            nav {
+                display: none !important;
+            }
+
+            .cname {
+                font-size: 4.2rem;
+            }
+            .cpro {
+                font-size: 3.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="btn-container">
+            <button id="btn-dark-mode" onclick="toggleDark()">Claro Escuro</button>
+            <button onclick="toggleLang()">PT-BR / EN</button>
+        </div>
+    </nav>
+
+    <div id="pt-br">
+        <header>
+            <p class="cname">WELLINGTON AYALA</p>
+            <p class="cpro">Desenvolvedor Java Jr</p>
+        </header>
+
+        <summary>
+            <p class="csummary">DESENVOLVEDOR JAVA JR | EXECUTIVO DE TI COM 30+ ANOS DE EXPERIENCIA</p>
+            <p>Desenvolvedor Java Junior focado em codigo limpo e escalavel no ecossistema Spring Boot, Data JPA, Hibernate, JavaFX, JDBC e API REST. Com a bem sucedida transicao de carreira de Executivo de TI, consegue unir Desenvolvimento com:</p>
+            <ul>
+                <li>Visao estrategica de Arquitetura e Governanca;</li>
+                <li>Entrega de valor ao negocio,</li>
+                <li>Senioridade em solucoes de problemas complexos e</li>
+                <li>Compreensao profunda das necessidades corporativas.</li>
+            </ul>
+            <br>
+            <br>
+            <p><b>DESENVOLVEDOR JAVA JR</b></p>
+            <p>O portfolio de projetos esta disponivel no repositorio no GitHub:</p>
+            <p><a class="link" href="https://github.com/programmerwellington?tab=repositories" target="_blank">https://github.com/programmerwellington?tab=repositories</a></p>
+            <br>
+            <p><b>Sistema parcial de Vendas.</b></p>
+            <a class="link" href="https://github.com/programmerwellington/erp" target="_blank">https://github.com/programmerwellington/erp</a>
+            <p>Em Java, MySQL, JDBC, DAO, com interface entre POO e Banco de Dados Relacional:</p>
+            <p>Destaque para a classe de associacao (Erp_Order_Product) no Java, associando as classes (Erp_Order) e (Erp_Product)	e uma classe auxiliar (Erp_Order_Product_Pk) para criar as chaves primarias compostas no Banco de Dados Relacional MySQL.</p>
+            <br>
+            <br>
+            <p><b>EXECUTIVO DE TECNOLOGIA, ESTRATEGIA E GOVERNANCA</b></p>
+            <p>Executivo com mais de 30 anos de trajetoria na lideranca de TI em setores de alta complexidade como: Desenvolvedora de Softwares, Industria, Mineracao, Logistica, Distribuicao e Varejo. Especialista em viabilizar os planos da empresa ao negocio, garantindo operacoes robustas, seguras e escalaveis.</p>
+            <br>
+            <p><b>Principais Competencias e Entregas:</b></p>
+            <br>
+            <p><b>Gestao Estrategica e Financeira:</b></p>
+            <p>Experiencia solida em Gestao, Tecnologia e reducao de custos operacionais. Implementei alteracoes operacionais no Compras, que resultaram em um incremento de R$ 1 milhao/ano no lucro liquido.</p>
+            <br>
+            <p><b>Lideranca de Transformacao:</b></p>
+            <p>Conducao de projetos criticos de implantacao de ERPs (Totvs, Oracle, Winthor, Datasul, Resulth, Colegium), migracao para Cloud e integracao de sistemas hibridos, utilizando metodologias ageis e PMBOK.</p>
+            <br>
+            <p><b>Governanca:</b></p>
+            <p>Experiente em estruturacao de governanca de TI, adequacao regulatoria em ambientes complexos e gestao de riscos/seguranca da informacao.</p>
+            <br>
+            <p><b>Gestao de Talentos e partes interessadas:</b></p>
+            <p>Lideranca de times multidisciplinares de alta performance e gestao estrategica de terceirizados.</p>
+            <br>
+            <p><b>Business Intelligence:</b></p>
+            <p>Implementacao de indicadores de gestao (KPIs) voltados para a saude financeira e operacional (DRE, EBITDA, Custos, Compras, Financeiro, Precificacoes, Vendas, Estoque...).</p>
+            <br>
+            <p><b>Destaque:</b></p>
+            <p>Premiado como "Melhor Instrutor de Treinamento", refletindo forte habilidade em desenvolvimento de pessoas e gestao de mudancas.</p>
+        </summary>
+
+        <main>
+            <p class="cexperiences">EXPERIENCIAS MAIS RELEVANTES</p>
+            <!-- _______________________________________________________________________________________________________________-->
+            <p class="cperiod">01/15 atual</p>      <p class="ccompany">WA ICT</p>              <p class="cbusiness">Tecnologia</p>
+            <p class="cposition">Desenvolvedor e Consultor</p>
+            <!-- _______________________________________________________________________________________________________________-->
+            <p class="cperiod">01/21 a 09/21</p>    <p class="ccompany">VJR</p>                 <p class="cbusiness">Atacado</p>
+            <p class="cposition">Supervisor de Tecnologia da Informacao</p>
+            <!-- _______________________________________________________________________________________________________________-->
+            <p class="cperiod">08/20 a 01/21</p>    <p class="ccompany">Amazon</p>              <p class="cbusiness">Fulfillment</p>
+            <p class="cposition">Support Asset</p>
+            <!-- _______________________________________________________________________________________________________________-->
+            <p class="cperiod">03/13 a 01/15</p>    <p class="ccompany">B³Cube Group</p>        <p class="cbusiness">Logistica</p>
+            <p class="cposition">Supervisor de Tecnologia da Informacao</p>
+            <!-- _______________________________________________________________________________________________________________-->
+            <p class="cperiod">01/11 a 03/13</p>    <p class="ccompany">Beldades</p>            <p class="cbusiness">Vestuario</p>
+            <p class="cposition">Proprietario</p>
+            <!-- _______________________________________________________________________________________________________________-->
+            <p class="cperiod">05/09 a 10/10</p>    <p class="ccompany">Teknisa Software</p>    <p class="cbusiness">ERP</p>
+            <p class="cposition">Consultor de BI (Business Intelligence)</p>
+            <!-- _______________________________________________________________________________________________________________-->
+            <p class="cperiod">07/06 a 01/08</p>    <p class="ccompany">PC Sistemas</p>         <p class="cbusiness">ERP</p>
+            <p class="cposition">Consultor de Implantacao de ERP</p>
+            <!-- _______________________________________________________________________________________________________________-->
+            <br>
+        </main>
+
+        <aside>
+            <p><a class="link" href="https://wa.me/5531992885679" target="_blank" rel="noopener noreferrer">
+                +55 31 99288.5679</a></p>
+            <p><a class="link" href="mailto:wellington.a.ayala@gmail.com" target="_blank">
+                wellington.a.ayala@gmail.com</a></p>
+            <p><a class="link" href="https://br.linkedin.com/in/wellington-ayala" target="_blank">
+                Linked in</a></p>
+            <p><a class="link" href="https://github.com/programmerwellington" target="_blank">
+                Git Hub</a></p>
+            <p><a class="link" href="https://maps.app.goo.gl/qXUFuJvPgfBWx9iz5" target="_blank">
+                Belo Horizonte MG Brasil</a></p>
+            <p><span class="birthday-container" date-year="1976">
+                1.976<span class="tooltip-age result-age"></span></span></p>
+            <br>
+
+            <p class="ccourses">HABILIDADES TECNICAS</p>
+            <p><b>Linguagens</b></p>
+            <p>Java, Clojure, Oracle PL SQL,</p>
+            <p>JavaScript, HTML CSS Grid Flexbox,</p>
+            <p>Clipper, Logica de Programacao</p>
+            <br>
+            
+            <p><b>Frameworks</b></p>
+            <p>Spring Boot, Spring Web</p>
+            <p>Spring Data JPA Hibernate</p>
+            <p>JavaFX, JDBC</p>
+            <br>
+            
+            <p><b>Recursos</b></p>
+            <p>Expressoes Lambda, Diagrama de Classes</p>
+            <p>Modelo de Dominios, Camadas Logicas</p>
+            <p>(Entidades, Recursos, Servicos, Repositorios)</p>
+            <p>CRUD</p>
+            <br>
+            
+            <p><b>Bancos de Dados</b></p>
+            <p>Oracle, MongoDB, PostgreSQL</p>
+            <p>MySQL, SQL Server, H2</p>
+            <br>
+            
+            <p><b>Ferramentas</b></p>
+            <p>GitHub, Maven, Scene Builder</p>
+            <p>Spring Initializr, Spring Tool Suite</p>
+            <p>Apache Tomcat, Postman</p>
+            <br>
+            
+            <p><b>Arquiteturas</b></p>
+            <p>API REST, Programacao Orientada a Objetos</p>
+            <p>Funcional, Imperativa Procedural</p>
+            <br>
+            
+            <p><b>ERPs e Sistemas</b></p>
+            <p>Windows Server, Linux, CISCO</p>
+            <p>Winthor, Totvs, Datasul, Resulth</p>
+            <p>Colegium, BI CoreVision</p>
+            <br>
+        </aside>
+
+        <footer>
+            <p class="cacademic">FORMACAO ACADEMICA</p>
+            <p>Gerenciamento de Redes de Computadores</p>
+            <br>
+
+            <p class="clanguages">IDIOMAS</p>
+            <p>Portugues nativo</p>
+            <p>Ingles</p>
+            <p>Italiano</p>
+            <br>
+
+            <p class="cvolunteering">ATIVIDADES NO 3º SETOR</p>
+            <p>Voluntario na arrecadacao de doacoes</p>
+            <p>Campanha do Quilo 1.996 (FEIG)</p>
+            <br>
+        </footer>
+        
+    </div>
+
+    <div id="en">
+        <header>
+            <p class="cname">WELLINGTON AYALA</p>
+            <p class="cpro">Junior Java Developer</p>
+        </header>
+
+        <summary>
+            <p class="csummary">JAVA DEVELOPER JR | IT EXECUTIVE WITH 30+ YEARS OF EXPERIENCE</p>
+            <p>Junior Java developer focused on clean and scalable code in the Spring Boot ecosystem, Data JPA, Hibernate, JavaFX, JDBC and REST API. With the successful career transition of IT Executive, you are able to combine Development with:</p>
+            <ul>
+                <li>Strategic vision of Architecture and Governance;</li>
+                <li>Delivering value to the business,</li>
+                <li>Seniority in solving complex problems and</li>
+                <li>Deep understanding of corporate needs.</li>
+            </ul>
+            <br>
+            <br>
+            <p><b>JAVA DEVELOPER JR</b></p>
+            <p>The project portfolio is available in the GitHub repository:</p>
+            <p><a class="link" href="https://github.com/programmerwellington?tab=repositories" target="_blank">https://github.com/programmerwellington?tab=repositories</a></p>
+            <br>
+            <p><b>Partial Sales System.</b></p>
+            <a class="link" href="https://github.com/programmerwellington/erp" target="_blank">https://github.com/programmerwellington/erp</a>
+            <p>In Java, MySQL, JDBC, DAO, with interface between OOP and Relational Database:</p>
+            <p>Highlight is the association class (Erp_Order_Product) in Java, associating the classes (Erp_Order) and (Erp_Product) and an auxiliary class (Erp_Order_Product_Pk) to create the composite primary keys in the MySQL Relational Database.</p>
+            <br>
+            <br>
+            <p><b>TECHNOLOGY, STRATEGY AND GOVERNANCE EXECUTIVE</b></p>
+            <p>Executive with more than 30 years of experience in IT leadership in highly complex sectors such as: Software Developer, Industry, Mining, Logistics, Distribution and Retail. Specialist in making the company's plans viable for the business, ensuring robust, safe and scalable operations.</p>
+            <br>
+            <p><b>Main Competencies and Deliveries:</b></p>
+            <br>
+            <p><b>Strategic and Financial Management:</b></p>
+            <p>Solid experience in Management, Technology and reduction of operational costs. Implemented operational changes in Purchasing, which resulted in an increase of R$1 million/year in net profit.</p>
+            <br>
+            <p><b>Transformation Leadership:</b></p>
+            <p>Conducting critical ERP implementation projects (Totvs, Oracle, Winthor, Datasul, Resulth, Colegium), migration to Cloud and integration of hybrid systems, using agile and PMBOK methodologies.</p>
+            <br>
+            <p><b>Governance:</b></p>
+            <p>Experienced in IT governance structure, regulatory compliance in complex environments and risk management/information security.</p>
+            <br>
+            <p><b>Talent Management and stakeholders:</b></p>
+            <p>Leadership of high-performance multidisciplinary teams and strategic management of outsourced employees.</p>
+            <br>
+            <p><b>Business Intelligence:</b></p>
+            <p>Implementation of management indicators (KPIs) focused on financial and operational health (Income Statement, EBITDA, Costs, Purchasing, Financial, Pricing, Sales, Stock...).</p>
+            <br>
+            <p><b>Highlight:</b></p>
+            <p>Awarded as "Best Training Instructor", reflecting strong skills in people development and change management.</p>
+        </summary>
+
+        <main>
+            <p class="cexperiences">MORE RELEVANT EXPERIENCES</p>
+            <!-- _______________________________________________________________________________________________________________-->
+            <p class="cperiod">01/15 current</p>      <p class="ccompany">WA ICT</p>             <p class="cbusiness">Technology</p>
+            <p class="cposition">Developer and Consultant</p>
+            <!-- _______________________________________________________________________________________________________________-->
+            <p class="cperiod">01/21 to 09/21</p>    <p class="ccompany">VJR</p>                 <p class="cbusiness">Wholesale</p>
+            <p class="cposition">Information Technology Supervisor</p>
+            <!-- _______________________________________________________________________________________________________________-->
+            <p class="cperiod">08/20 to 01/21</p>    <p class="ccompany">Amazon</p>              <p class="cbusiness">Fulfillment</p>
+            <p class="cposition">Support Asset</p>
+            <!-- _______________________________________________________________________________________________________________-->
+            <p class="cperiod">03/13 to 01/15</p>    <p class="ccompany">B³Cube Group</p>        <p class="cbusiness">Logistics</p>
+            <p class="cposition">Information Technology Supervisor</p>
+            <!-- _______________________________________________________________________________________________________________-->
+            <p class="cperiod">01/11 to 03/13</p>    <p class="ccompany">Beldades</p>            <p class="cbusiness">Clothing</p>
+            <p class="cposition">Owner</p>
+            <!-- _______________________________________________________________________________________________________________-->
+            <p class="cperiod">05/09 to 10/10</p>    <p class="ccompany">Teknisa Software</p>    <p class="cbusiness">ERP</p>
+            <p class="cposition">BI Consultant</p>
+            <!-- _______________________________________________________________________________________________________________-->
+            <p class="cperiod">07/06 to 01/08</p>    <p class="ccompany">PC Sistemas</p>         <p class="cbusiness">ERP</p>
+            <p class="cposition">ERP Implementation Consultant</p>
+            <!-- _______________________________________________________________________________________________________________-->
+            <br>
+        </main>
+
+        <aside>
+            <p><a class="link" href="https://wa.me/5531992885679" target="_blank" rel="noopener noreferrer">
+                +55 31 99288.5679</a></p>
+            <p><a class="link" href="mailto:wellington.a.ayala@gmail.com" target="_blank">
+                wellington.a.ayala@gmail.com</a></p>
+            <p><a class="link" href="https://br.linkedin.com/in/wellington-ayala" target="_blank">
+                Linked in</a></p>
+            <p><a class="link" href="https://github.com/programmerwellington" target="_blank">
+                Git Hub</a></p>
+            <p><a class="link" href="https://maps.app.goo.gl/qXUFuJvPgfBWx9iz5" target="_blank">
+                Belo Horizonte, MG Brazil</a></p>
+            <p><span class="birthday-container" date-year="1976">
+                1,976<span class="tooltip-age result-age"></span></span></p>
+            <br>
+
+            <p class="ccourses">TECHNICAL SKILLS</p>
+            <p><b>Languages</b></p>
+            <p>Java, Clojure, Oracle PL SQL,</p>
+            <p>JavaScript, HTML CSS Grid Flexbox,</p>
+            <p>Clipper, Programming Logic</p>
+            <br>
+            
+            <p><b>Frameworks</b></p>
+            <p>Spring Boot, Spring Web</p>
+            <p>Spring Data JPA Hibernate</p>
+            <p>JavaFX, JDBC</p>
+            <br>
+            
+            <p><b>Features</b></p>
+            <p>Lambda Expressions, Class Diagram</p>
+            <p>Domain Model, Logical Layers</p>
+            <p>(Entities, Resources, Services, Repositories)</p>
+            <p>CRUD</p>
+            <br>
+            
+            <p><b>Databases</b></p>
+            <p>Oracle, MongoDB, PostgreSQL</p>
+            <p>MySQL, SQL Server, H2</p>
+            <br>
+            
+            <p><b>Tools</b></p>
+            <p>GitHub, Maven, Scene Builder</p>
+            <p>Spring Initializr, Spring Tool Suite</p>
+            <p>Apache Tomcat, Postman</p>
+            <br>
+            
+            <p><b>Architectures</b></p>
+            <p>REST API, Object Oriented Programming</p>
+            <p>Functional, Procedural Imperative</p>
+            <br>
+            
+            <p><b>ERP and Systems</b></p>
+            <p>Windows Server, Linux, CISCO</p>
+            <p>Winthor, Totvs, Datasul, Resulth</p>
+            <p>Colegium, BI CoreVision</p>
+            <br>
+        </aside>
+
+        <footer>
+            <p class="cacademic">ACADEMIC TRAINING</p>
+            <p>Computer Network Management</p>
+            <br>
+
+            <p class="clanguages">LANGUAGES</p>
+            <p>Native Portuguese</p>
+            <p>English</p>
+            <p>Italian</p>
+            <br>
+
+            <p class="cvolunteering">3rd SECTOR ACTIVITIES</p>
+            <p>Volunteer at donation collection</p>
+            <p>1,996 Kilo Campaign (FEIG)</p>
+            <br>
+        </footer>
+
+    </div>
+
+    <script>
+        // Light and Dark Mode
+        function toggleDark() {
+            document.body.classList.toggle('dark-mode');
+        }
+
+        // Language Switch
+        function toggleLang() {
+            const divPt = document.getElementById('pt-br');
+            const divEn = document.getElementById('en');
+            const btnDark = document.getElementById('btn-dark-mode');
+
+            if (divPt.style.display === 'none') {
+                divPt.style.display = 'contents';
+                divEn.style.display = 'none';
+                btnDark.innerText = "Claro Escuro";
+                updateAgeText(true);
+            } else {
+                divPt.style.display = 'none';
+                divEn.style.display = 'contents';
+                btnDark.innerText = "Light Dark";
+                updateAgeText(false);
+            }
+        }
+
+        // Age's function principal
+        function updateAgeText(isPortuguese) {
+            const containers = document.querySelectorAll('.birthday-container');
+            const tooltips = document.querySelectorAll('.result-age');
+            const currentYear = new Date().getFullYear();
+            const suffix = isPortuguese ? "anos" : "years";
+
+            // Loop to update each tooltip found on the screen
+            tooltips.forEach((tooltip, index) => {
+                const birthYear = parseInt(containers[index].getAttribute('date-year'));
+                const age = currentYear - birthYear;
+                tooltip.innerText = `${age} ${suffix}`;
+            });
+        }
+
+        // Initialization when loading page
+        document.addEventListener('DOMContentLoaded', () => {
+            updateAgeText(true);
+        });
+    </script>
+</body>
+</html>
